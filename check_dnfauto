@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PLUGINDIR=$(dirname $0)
+. $PLUGINDIR/utils.sh
+
+status=$(systemctl is-failed dnf-automatic 2>/dev/null)
+r=$?
+if [[ -z "$status" ]]; then
+    echo "ERROR: service dnf-automatic doesn't exist"
+    exit $STATE_CRITICAL
+fi
+if [[ $r -eq 0 ]]; then
+    echo "ERROR: service dnf-automatic is $status"
+    exit $STATE_CRITICAL
+fi
+
+echo "OK: service dnf-automatic ran without errors"
+exit $STATE_OK
